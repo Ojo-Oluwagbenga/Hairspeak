@@ -2199,8 +2199,8 @@ class TransactionAPI:
             # pay_code = outstanding.item_code
 
             params = {
-                # "Authorization":"Bearer sk_live_eabc4113227dc2530121c270fde2497ca123527c",
-                "Authorization":"Bearer sk_test_Y3wqHLPb3CtT3mjQY2oRumqSxWwHdTMNPerECzyZ",
+                # "Authorization":"B sk",
+                # "Authorization":"B sk",
             }
             check_req = requests.get("https://google.com", headers=params)
             print (check_req)
@@ -2300,8 +2300,8 @@ class TransactionAPI:
                 return HttpResponse(json.dumps(callresponse))
 
             params = {
-                # "Authorization":"Bearer sk_live_eabc4113227dc2530121c270fde2497ca123527c",
-                "Authorization":"Bearer sk_test_Y3wqHLPb3CtT3mjQY2oRumqSxWwHdTMNPerECzyZ",
+                # "Authorization":"B sk",
+                # "Authorization":"B sk",
             }
             check_req = requests.get("https://api.korapay.com/merchant/api/v1/charges/"+reference, headers=params)
             check_req = check_req.json()
@@ -2491,7 +2491,8 @@ class TransactionAPI:
         if (response.method == "POST"):
             data = json.loads(response.body.decode('utf-8'))
             params = {
-                "Authorization":"Bearer sk_test_1a4fa744b46e01060f7a39564a77171a98034c09",
+                # "Authorization":"B sk",
+                # "Authorization":"B sk",
             }
             check_req = requests.get("https://api.paystack.co/bank/resolve?account_number="+data['account_number']+"&bank_code=" + data['bank_code'], headers=params)
             return  HttpResponse(json.dumps(check_req.json()))
