@@ -4,7 +4,8 @@ from django.shortcuts import redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 import os
-
+from django.conf import settings
+import json
 
 # Create your views here.
 
@@ -37,7 +38,28 @@ def dashboard(response):
     return render(response, "dashboard.html", qset)
 
 def homepage(response):
-    return render(response, "homepage.html", {})
+    # Define the folder path
+    images_dir = os.path.join(settings.MEDIA_ROOT, 'images')
+
+    # Check if the directory exists
+    if not os.path.exists(images_dir):
+        return JsonResponse({'error': 'Directory not found'}, status=404)
+
+    # Get all filenames (excluding folders)
+    files = [
+        filename for filename in os.listdir(images_dir)
+        if os.path.isfile(os.path.join(images_dir, filename))
+    ]
+
+    # Optionally return URLs instead of just filenames
+    file_urls = [response.build_absolute_uri(settings.MEDIA_URL + 'images/' + f) for f in files]
+
+
+    return render(response, "homepage.html",{"hair_records": json.dumps({
+        "hair_records": len(files),
+        "filenames": files,
+        "file_urls": file_urls,
+    })})
 
 def report(response, report_code):
     if not response.session.get("user_data"):
