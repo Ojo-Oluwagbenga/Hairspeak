@@ -45,21 +45,27 @@ def homepage(response):
     if not os.path.exists(images_dir):
         return JsonResponse({'error': 'Directory not found'}, status=404)
 
-    # Get all filenames (excluding folders)
+    # Get all filenames (excluding folders), removing extensions
     files = [
-        filename for filename in os.listdir(images_dir)
+        os.path.splitext(filename)[0]  # get name without extension
+        for filename in os.listdir(images_dir)
         if os.path.isfile(os.path.join(images_dir, filename))
     ]
 
-    # Optionally return URLs instead of just filenames
-    file_urls = [response.build_absolute_uri(settings.MEDIA_URL + 'images/' + f) for f in files]
+    # Generate URLs (keep full filenames with extensions)
+    file_urls = [
+        response.build_absolute_uri(settings.MEDIA_URL + 'images/' + filename)
+        for filename in os.listdir(images_dir)
+        if os.path.isfile(os.path.join(images_dir, filename))
+    ]
 
-
-    return render(response, "homepage.html",{"hair_records": json.dumps({
-        "hair_records": len(files),
-        "filenames": files,
-        "file_urls": file_urls,
-    })})
+    return render(response, "homepage.html", {
+        "hair_records": json.dumps({
+            "hair_records": len(files),
+            "filenames": files,
+            "file_urls": file_urls,
+        })
+    })
 
 def report(response, report_code):
     if not response.session.get("user_data"):
